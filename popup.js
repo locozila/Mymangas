@@ -1,0 +1,187 @@
+document.addEventListener('DOMContentLoaded', function() {
+    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        if(tabs[0].url.search("/perfil-manga/") != -1 || tabs[0].url.search("/manga/") != -1){
+            mangaPage(tabs[0].url);
+        }else if(tabs[0].url.search("/leitor/") != -1){
+            capPage(tabs[0].url);
+        }
+    });
+});
+
+//Funcion to analyse perfil manga page
+function mangaPage(url){
+    var p = document.getElementById('mangaInfo');
+    //Get the manga name from the page content
+    getMangaNameFromPage('document.querySelector("body > div.container > div:nth-child(4) > div.col-md-8.tamanho-bloco-perfil > div:nth-child(1) > div > h2").outerText');
+
+    //Analyse if this manga is already storage
+    getMangaData().then(function(defs){
+        if(defs !== ""){
+            var mangaList = defs.split('\n');
+            var info = arraySearch(mangaList, url);
+            refreshLabel(info, url);
+        }else{
+            addMangaToList(url);
+        }
+    });
+}
+
+//Function to analyse cap manga page
+function capPage(url){
+    var p = document.getElementById('mangaInfo');
+    var urlNumCap = url.split('/');
+    urlNumCap = urlNumCap[urlNumCap.length-1];
+    getMangaNameFromPage('document.evaluate("/html/body/div[1]/div/h1", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText');
+
+    getMangaData().then(function(defs){
+        if(defs !== ""){
+            var mangaList = defs.split('\n');
+            var info = arraySearch(mangaList, url, 1);
+            refreshLabel(info, url, 1);
+        }else{
+            addMangaToList(url, 1);
+        }
+    });
+}
+
+/**
+ * Index 0 - Manga link
+ * Index 1 - Cap link
+ * 
+ * The type is default with the index 1
+ * */
+function arraySearch(array, obj, type=0){
+    var infos = "";
+    var t = type;
+    obj = obj.toLowerCase();
+    
+    if(!type){
+        aux = obj.split("/");
+        obj = aux[aux.length-1];
+    }else{
+        t = 0;
+        aux = obj.split("/");
+        obj = aux[aux.length-2];
+        aux = obj.split('_');
+        obj = aux.join('-');
+    }    
+    
+    for(i in array){
+        var manga = array[i].split(" - ");
+
+        if(manga[t] !== 'x'){
+            var aux = manga[t].split("/");
+            manga[t] = aux[aux.length-1];
+        }
+
+        if(manga[t] === obj){
+            infos = array[i].split(" - ");
+        }
+    }
+    return infos;
+}
+
+//Get the storage local
+async function getMangaData(){
+    var mData = new Promise(function(resolve, reject){
+        chrome.storage.local.get('list', function(result) {        
+            resolve(result.list);
+        }); 
+    });
+
+    return await mData;
+}
+
+//Use the specific code from page to extract the name of mangá
+function getMangaNameFromPage(myCode){
+    var mName = document.getElementById("mangaName");
+    chrome.tabs.executeScript(null, {
+        code: myCode,
+        allFrames: false,
+        runAt: 'document_start',
+    }, function(results) {
+        var result = results[0].split(" - ")[0];
+        mName.innerText = result;
+    });
+}
+
+//Add an entry on storage
+function addMangaToList(url, type=0){
+    var urlPerfilManga = "https://unionleitor.top/manga/";
+    var p = document.getElementById('mangaInfo');
+    var mangaData = "";
+
+    //Verify if was called from manga page or cap page
+    if(type){
+        var mName = url.split('/');
+        mName = mName[mName.length-2].split('_');
+        var mangaName = mName.join('-');
+        mangaData = urlPerfilManga + mangaName + " - " + url;
+    }else{
+        mangaData = url + " - x";
+    }
+    
+    chrome.storage.local.get('list', function(result) {      
+        (result.list === "") ? mangas = mangaData.toLowerCase() : mangas = result.list + "\n" + mangaData.toLowerCase();
+        chrome.storage.local.set({'list': mangas});
+    }); 
+    
+    p.innerText = "Mangá salvo!";
+}
+
+//Update the label with the corresponding action
+function refreshLabel(info, url, type=0){
+    var p = document.getElementById('mangaInfo');
+    var urlAux = url.split("/");
+    var mangaN = urlAux[urlAux.length-2];
+    mangaN = mangaN.toLowerCase();
+    if(info === ""){ //If was a new manga, add to list
+        if(!type){
+            addMangaToList(url, type);
+        }
+    }else{
+        //verify if this a new unread manga
+        if(info[1] === 'x'){  
+            if(!type){
+                p.innerHTML = "Este mangá ainda não foi lido."
+            }else{
+                updateLine(info, url);
+                var capNum = url.split("/");
+                capNum = capNum[capNum.length-1];
+                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+            }
+        }else{
+            if(!type){
+                //Get the cap number from URL
+                var capNum = info[1].split("/");
+                capNum = capNum[capNum.length-1];
+                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+info[1]+"' target='_blank'>"+capNum+"</a></i></b>";
+            }else{
+                var urlNum = url.split("/");
+                urlNum = urlNum[urlNum.length-1];
+
+                var capNum = info[1].split("/");
+                capNum = capNum[capNum.length-1];
+
+                if(urlNum > capNum){
+                    updateLine(info, url);
+                }
+                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+            }
+        }
+    }
+}
+
+//Update the row value
+function updateLine(info, url){
+    chrome.storage.local.get('list', function(result) {      
+        var array = result.list.split("\n");
+        for(i in array){
+            if(array[i] === info.join(" - ")){
+                array[i] = info[0] + " - " + url;
+            }
+        }
+        var mangaList = array.join("\n");
+        chrome.storage.local.set({'list': mangaList});
+    });
+}

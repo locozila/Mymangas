@@ -1,0 +1,24 @@
+body{
+    align-items: center;
+    align-self: center;
+}
+.center{
+    margin: auto;
+    width: 28%;
+    padding: 10px;
+}
+.example{
+    color: #4caf50;
+    font-style: italic;
+}
+.cap{
+    font-style: italic;
+    font-weight: bold;
+}
+
+#header {
+    border-color: transparent;
+    height: 108px; /* change according your logo image height */
+    padding-top: 2em;
+    z-index: -1;
+    }
