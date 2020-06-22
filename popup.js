@@ -63,6 +63,7 @@ function arraySearch(array, obj, type=0){
         aux = obj.split("/");
         obj = aux[aux.length-2];
         aux = obj.split('_');
+        aux = removeElementFromArray(aux);
         obj = aux.join('-');
     }    
     
@@ -115,6 +116,7 @@ function addMangaToList(url, type=0){
     if(type){
         var mName = url.split('/');
         mName = mName[mName.length-2].split('_');
+        mName = removeElementFromArray(mName);
         var mangaName = mName.join('-');
         mangaData = urlPerfilManga + mangaName + " - " + url;
     }else{
@@ -123,7 +125,7 @@ function addMangaToList(url, type=0){
     
     chrome.storage.local.get('list', function(result) {      
         (result.list === "") ? mangas = mangaData.toLowerCase() : mangas = result.list + "\n" + mangaData.toLowerCase();
-        chrome.storage.local.set({'list': mangas});
+        chrome.storage.local.set({'list': mangas.toLowerCase()});
     }); 
     
     p.innerText = "Mangá salvo!";
@@ -138,10 +140,12 @@ function refreshLabel(info, url, type=0){
     if(info === ""){ //If was a new manga, add to list
         if(!type){
             addMangaToList(url, type);
+        }else{
+            addMangaToList(url, type, 1);
         }
     }else{
         //verify if this a new unread manga
-        if(info[1] === 'x'){  
+        if(info[1] === 'x'){
             if(!type){
                 p.innerHTML = "Este mangá ainda não foi lido."
             }else{
@@ -182,6 +186,16 @@ function updateLine(info, url){
             }
         }
         var mangaList = array.join("\n");
-        chrome.storage.local.set({'list': mangaList});
+        chrome.storage.local.set({'list': mangaList.toLowerCase()});
     });
+}
+
+//Removing element from manga name
+function removeElementFromArray(arr, elem="-"){
+    for(var i = 0; i < arr.length; i++){
+        if(arr[i] === elem) {
+            arr.splice(i, 1);
+        } 
+    }
+    return arr;
 }
