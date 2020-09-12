@@ -2,7 +2,7 @@
     "name": "Meus mangás",
     "version": "1.0",
     "description": "Histórico local de mangás",
-    "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "https://unionleitor.top/"],
+    "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "https://unionmangas.top/", "https://unionleitor.top/"],
     "options_page": "options.html",
     "background": {
       "scripts": ["background.js"],

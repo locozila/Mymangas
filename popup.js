@@ -34,12 +34,12 @@ function capPage(url){
     getMangaNameFromPage('document.evaluate("/html/body/div[1]/div/h1", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText');
 
     getMangaData().then(function(defs){
-        if(defs !== ""){
+        if(defs === undefined || defs === ""){
+            addMangaToList(url, 1);
+        }else{
             var mangaList = defs.split('\n');
             var info = arraySearch(mangaList, url, 1);
             refreshLabel(info, url, 1);
-        }else{
-            addMangaToList(url, 1);
         }
     });
 }
@@ -85,7 +85,7 @@ function arraySearch(array, obj, type=0){
 //Get the storage local
 async function getMangaData(){
     var mData = new Promise(function(resolve, reject){
-        chrome.storage.local.get('list', function(result) {        
+        chrome.storage.sync.get('list', function(result) {        
             resolve(result.list);
         }); 
     });
@@ -123,9 +123,9 @@ function addMangaToList(url, type=0){
         mangaData = url + " - x";
     }
     
-    chrome.storage.local.get('list', function(result) {      
-        (result.list === "") ? mangas = mangaData.toLowerCase() : mangas = result.list + "\n" + mangaData.toLowerCase();
-        chrome.storage.local.set({'list': mangas.toLowerCase()});
+    chrome.storage.sync.get('list', function(result) {      
+        mangas = (result.list === undefined || result.list === "") ?  mangaData.toLowerCase() : result.list + "\n" + mangaData.toLowerCase();
+        chrome.storage.sync.set({'list': mangas.toLowerCase()});
     }); 
     
     p.innerText = "Mangá salvo!";
@@ -178,7 +178,7 @@ function refreshLabel(info, url, type=0){
 
 //Update the row value
 function updateLine(info, url){
-    chrome.storage.local.get('list', function(result) {      
+    chrome.storage.sync.get('list', function(result) {      
         var array = result.list.split("\n");
         for(i in array){
             if(array[i] === info.join(" - ")){
@@ -186,7 +186,7 @@ function updateLine(info, url){
             }
         }
         var mangaList = array.join("\n");
-        chrome.storage.local.set({'list': mangaList.toLowerCase()});
+        chrome.storage.sync.set({'list': mangaList.toLowerCase()});
     });
 }
 
