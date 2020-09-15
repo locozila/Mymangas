@@ -1,5 +1,5 @@
 ## My manga history
-The extension saves your manga reading history in [Union Mangás](https://unionleitor.top/). Open the manga page or chapter and click on the extension to save it. The extension save the last chapter read from each manga.
+The extension saves your manga reading history in [Union Mangás](https://unionleitor.top/). Open the manga page or chapter and click on the extension to automatically save or list. The extension save only the newest chapter from each manga.
 
 
 ### Installing
