@@ -16,12 +16,12 @@ function mangaPage(url){
 
     //Analyse if this manga is already storage
     getMangaData().then(function(defs){
-        if(defs !== ""){
+        if(defs === undefined || defs === ""){
+            addMangaToList(url);
+        }else{
             var mangaList = defs.split('\n');
             var info = arraySearch(mangaList, url);
             refreshLabel(info, url);
-        }else{
-            addMangaToList(url);
         }
     });
 }
@@ -53,7 +53,6 @@ function capPage(url){
 function arraySearch(array, obj, type=0){
     var infos = "";
     var t = type;
-    obj = obj.toLowerCase();
     
     if(!type){
         aux = obj.split("/");
@@ -75,7 +74,11 @@ function arraySearch(array, obj, type=0){
             manga[t] = aux[aux.length-1];
         }
 
-        if(manga[t] === obj){
+        console.log(manga[t]);
+        console.log(obj);
+        console.log(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }));
+
+        if(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }) === 0){
             infos = array[i].split(" - ");
         }
     }
@@ -108,7 +111,7 @@ function getMangaNameFromPage(myCode){
 
 //Add an entry on storage
 function addMangaToList(url, type=0){
-    var urlPerfilManga = "https://unionleitor.top/manga/";
+    var urlPerfilManga = (url.includes("unionleitor")) ? "https://unionleitor.top/manga/" : "https://unionmangas.top/manga/";
     var p = document.getElementById('mangaInfo');
     var mangaData = "";
 
@@ -124,8 +127,8 @@ function addMangaToList(url, type=0){
     }
     
     chrome.storage.sync.get('list', function(result) {      
-        mangas = (result.list === undefined || result.list === "") ?  mangaData.toLowerCase() : result.list + "\n" + mangaData.toLowerCase();
-        chrome.storage.sync.set({'list': mangas.toLowerCase()});
+        mangas = (result.list === undefined || result.list === "") ?  mangaData : result.list + "\n" + mangaData;
+        chrome.storage.sync.set({'list': mangas});
     }); 
     
     p.innerText = "Mangá salvo!";
@@ -136,7 +139,7 @@ function refreshLabel(info, url, type=0){
     var p = document.getElementById('mangaInfo');
     var urlAux = url.split("/");
     var mangaN = urlAux[urlAux.length-2];
-    mangaN = mangaN.toLowerCase();
+    
     if(info === ""){ //If was a new manga, add to list
         if(!type){
             addMangaToList(url, type);
@@ -186,7 +189,7 @@ function updateLine(info, url){
             }
         }
         var mangaList = array.join("\n");
-        chrome.storage.sync.set({'list': mangaList.toLowerCase()});
+        chrome.storage.sync.set({'list': mangaList});
     });
 }
 
