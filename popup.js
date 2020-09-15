@@ -133,8 +133,6 @@ function addMangaToList(url, type=0){
 //Update the label with the corresponding action
 function refreshLabel(info, url, type=0){
     var p = document.getElementById('mangaInfo');
-    var urlAux = url.split("/");
-    var mangaN = urlAux[urlAux.length-2];
     
     if(info === ""){ //If was a new manga, add to list
         if(!type){
