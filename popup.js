@@ -4,9 +4,42 @@ document.addEventListener('DOMContentLoaded', function() {
             mangaPage(tabs[0].url);
         }else if(tabs[0].url.search("/leitor/") != -1){
             capPage(tabs[0].url);
+        }else{
+            listMangas();
         }
     });
 });
+
+function listMangas(){
+    var mName = document.getElementById('mangaName');
+    var mangaInfo = document.getElementById('mangaInfo');
+
+    getMangaData().then(function(defs){
+        if(defs === undefined || defs === ""){        
+            mName.innerText = "Nenhum Mangá Salvo!";
+        }else{
+            var content = ``;
+            var mangaList = defs.split('\n');
+
+            for (i in mangaList){
+                var manga = mangaList[i].split(" - ");
+                var aux = manga[1].split("/");
+                var mangaName = aux[aux.length-2].replace(/_/g, " ");
+
+                if(manga[1] !== 'x'){
+                    var mangaCap = manga[1].split("/");
+                    var capNum = mangaCap[mangaCap.length-1];
+
+                    content += `${mangaName} - <b><i>Cap <a href="${manga[1]}" target="_blank">${capNum}</a></i></b><br>`;
+                }else{
+                    content += `${mangaName} - <b>X</b><br>`;
+                }
+            }
+            mName.innerText = "Lista de Mangás";
+            mangaInfo.innerHTML = content;
+        }
+    });
+}
 
 //Funcion to analyse perfil manga page
 function mangaPage(url){

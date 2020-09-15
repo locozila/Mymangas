@@ -3,7 +3,7 @@ let saveBt = document.getElementById('save');
 
 function saveList(){
     var text = mlist.value;
-    chrome.storage.sync.set({'list': text.toLowerCase()});
+    chrome.storage.sync.set({'list': text});
     alert("Lista salva!");
 }
 
