@@ -73,11 +73,7 @@ function arraySearch(array, obj, type=0){
             var aux = manga[t].split("/");
             manga[t] = aux[aux.length-1];
         }
-
-        console.log(manga[t]);
-        console.log(obj);
-        console.log(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }));
-
+        
         if(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }) === 0){
             infos = array[i].split(" - ");
         }
