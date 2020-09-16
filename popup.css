@@ -1,6 +1,17 @@
-html{
-    min-width:300px
+body{
+    min-width: 300px;
 }
-.infos,.content{
+.infos{
     text-align: center
+}
+
+.content{
+    max-height: 75vh;
+    overflow-y: scroll;
+    text-align: center;
+    margin: 5vh;
+}
+
+.content::-webkit-scrollbar {
+    display: none;
 }

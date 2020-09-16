@@ -23,15 +23,20 @@ function listMangas(){
 
             for (i in mangaList){
                 var manga = mangaList[i].split(" - ");
-                var aux = manga[1].split("/");
-                var mangaName = aux[aux.length-2].replace(/_/g, " ");
+                var mangaName = "";
 
                 if(manga[1] !== 'x'){
+                    var aux = manga[1].split("/");
+                    var mangaName = aux[aux.length-2].replace(/_/g, " ");
+
                     var mangaCap = manga[1].split("/");
                     var capNum = mangaCap[mangaCap.length-1];
 
                     content += `${mangaName} - <b><i>Cap <a href="${manga[1]}" target="_blank">${capNum}</a></i></b><br>`;
                 }else{
+                    var mN = manga[0].split("/");
+                    mangaName = formatText(mN[mN.length-1]);
+
                     content += `${mangaName} - <b>X</b><br>`;
                 }
             }
@@ -39,6 +44,14 @@ function listMangas(){
             mangaInfo.innerHTML = content;
         }
     });
+}
+
+function formatText(text){
+    var list = text.split('-');
+    for(i in list){
+        list[i] = list[i].charAt(0).toUpperCase() + list[i].slice(1);
+    }
+    return list.join(" ");
 }
 
 //Funcion to analyse perfil manga page
@@ -182,14 +195,14 @@ function refreshLabel(info, url, type=0){
                 updateLine(info, url);
                 var capNum = url.split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = "Você está lendo Cap <b><i><a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
             }
         }else{
             if(!type){
                 //Get the cap number from URL
                 var capNum = info[1].split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+info[1]+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = "Você está lendo Cap <b><i><a href='"+info[1]+"' target='_blank'>"+capNum+"</a></i></b>";
             }else{
                 var urlNum = url.split("/");
                 urlNum = urlNum[urlNum.length-1];
@@ -200,7 +213,7 @@ function refreshLabel(info, url, type=0){
                 if(urlNum > capNum){
                     updateLine(info, url);
                 }
-                p.innerHTML = "O último capítulo aberto deste mangá foi: <b><i>Cap <a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = "Você está lendo Cap <b><i><a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
             }
         }
     }
