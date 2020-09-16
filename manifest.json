@@ -23,6 +23,6 @@
       "48": "images/logo48.png",
       "128": "images/logo128.png"
   },
-    "content_security_policy":"script-src 'self' https://apis.google.com; object-src 'self'",
+    "content_security_policy":"script-src 'self' https://unionleitor.top/politica-de-privacidade; object-src 'self'",
     "manifest_version": 2
 }

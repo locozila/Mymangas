@@ -197,19 +197,19 @@ function refreshLabel(info, url, type=0){
         //verify if this a new unread manga
         if(info[1] === 'x'){
             if(!type){
-                p.innerHTML = "Este mangá ainda não foi lido."
+                p.innerHTML = `<p class="capInfo">Este mangá ainda não foi lido.</p>`;
             }else{
                 updateLine(info, url);
                 var capNum = url.split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = "Você está lendo Cap <b><i><a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
             }
         }else{
             if(!type){
                 //Get the cap number from URL
                 var capNum = info[1].split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = "Você está lendo Cap <b><i><a href='"+info[1]+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${info[1]}" target="_blank">${capNum}</a></i></p></b>`;
             }else{
                 var urlNum = url.split("/");
                 urlNum = urlNum[urlNum.length-1];
@@ -220,7 +220,7 @@ function refreshLabel(info, url, type=0){
                 if(urlNum > capNum){
                     updateLine(info, url);
                 }
-                p.innerHTML = "Você está lendo Cap <b><i><a href='"+url+"' target='_blank'>"+capNum+"</a></i></b>";
+                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
             }
         }
     }

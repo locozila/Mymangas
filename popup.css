@@ -5,6 +5,10 @@ body{
     text-align: center
 }
 
+.capInfo{
+    text-align: center
+}
+
 .content{
     max-height: 75vh;
     overflow-y: scroll;
