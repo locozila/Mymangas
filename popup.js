@@ -18,28 +18,33 @@ function listMangas(){
         if(defs === undefined || defs === ""){        
             mName.innerText = "Nenhum Mangá Salvo!";
         }else{
-            var content = ``;
+            var content = `<table>`;
             var mangaList = defs.split('\n');
+
+            mangaList.sort(function(a, b){
+                var mangaA = a.split(" - ");
+                var mangaB = b.split(" - ");
+
+                var aux = mangaA[0].split("/");
+                var mangaNameA = formatText(aux[aux.length-1]);
+
+                var aux = mangaB[0].split("/");
+                var mangaNameB = formatText(aux[aux.length-1]);
+
+                if (mangaNameA > mangaNameB) return 1;
+                else return -1;
+            });
 
             for (i in mangaList){
                 var manga = mangaList[i].split(" - ");
-                var mangaName = "";
+                
+                var mN = manga[0].split("/");
+                var mangaName = formatText(mN[mN.length-1]);        
 
-                if(manga[1] !== 'x'){
-                    var aux = manga[1].split("/");
-                    var mangaName = aux[aux.length-2].replace(/_/g, " ");
-
-                    var mangaCap = manga[1].split("/");
-                    var capNum = mangaCap[mangaCap.length-1];
-
-                    content += `${mangaName} - <b><i>Cap <a href="${manga[1]}" target="_blank">${capNum}</a></i></b><br>`;
-                }else{
-                    var mN = manga[0].split("/");
-                    mangaName = formatText(mN[mN.length-1]);
-
-                    content += `${mangaName} - <b>X</b><br>`;
-                }
+                var link = (manga[1] !== 'x') ? manga[1] : manga[0];
+                content += `<tr><td><b><i><a href="${link}" target="_blank">${mangaName}</a></i></b></td></tr>`;
             }
+            content += `</tr></table>`;
             mName.innerText = "Lista de Mangás";
             mangaInfo.innerHTML = content;
         }
@@ -47,6 +52,8 @@ function listMangas(){
 }
 
 function formatText(text){
+    text.toLowerCase();
+
     var list = text.split('-');
     for(i in list){
         list[i] = list[i].charAt(0).toUpperCase() + list[i].slice(1);

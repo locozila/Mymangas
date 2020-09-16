@@ -8,10 +8,20 @@ body{
 .content{
     max-height: 75vh;
     overflow-y: scroll;
-    text-align: center;
     margin: 5vh;
 }
 
 .content::-webkit-scrollbar {
     display: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+td{
+    border-style: groove;
+    border-left-style: solid;
+    border-left-color: #800000;
+    border-radius: 5px;
 }
