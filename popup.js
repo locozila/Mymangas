@@ -11,14 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function listMangas(){
-    var mName = document.getElementById('mangaName');
+    //var mName = document.getElementById('mangaName');
     var mangaInfo = document.getElementById('mangaInfo');
 
     getMangaData().then(function(defs){
         if(defs === undefined || defs === ""){        
-            mName.innerText = "Nenhum Mangá Salvo!";
+            document.styleSheets[0].rules[3].style.width = '';
+            document.styleSheets[0].rules[2].style.width = '112vh';
+            mangaInfo.innerHTML = `<p class="capInfo">Nenhum Mangá Salvo!</p>`;          
         }else{
-            var content = `<table>`;
+            var content = `<table align="center">`;
             var mangaList = defs.split('\n');
 
             mangaList.sort(function(a, b){
@@ -45,7 +47,6 @@ function listMangas(){
                 content += `<tr><td><b><i><a href="${link}" target="_blank">${mangaName}</a></i></b></td></tr>`;
             }
             content += `</tr></table>`;
-            mName.innerText = "Lista de Mangás";
             mangaInfo.innerHTML = content;
         }
     });
@@ -63,7 +64,9 @@ function formatText(text){
 
 //Funcion to analyse perfil manga page
 function mangaPage(url){
-    var p = document.getElementById('mangaInfo');
+    document.styleSheets[0].rules[2].style.width = '112vh';    
+    //document.styleSheets[0].rules[3].style.backgroundColor = '';
+
     //Get the manga name from the page content
     getMangaNameFromPage('document.querySelector("body > div.container > div:nth-child(4) > div.col-md-8.tamanho-bloco-perfil > div:nth-child(1) > div > h2").outerText');
 
@@ -81,7 +84,9 @@ function mangaPage(url){
 
 //Function to analyse cap manga page
 function capPage(url){
-    var p = document.getElementById('mangaInfo');
+    document.styleSheets[0].rules[2].style.width = '112vh';    
+    //document.styleSheets[0].rules[3].style.backgroundColor = '';
+
     var urlNumCap = url.split('/');
     urlNumCap = urlNumCap[urlNumCap.length-1];
     getMangaNameFromPage('document.evaluate("/html/body/div[1]/div/h1", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.innerText');
@@ -147,14 +152,12 @@ async function getMangaData(){
 
 //Use the specific code from page to extract the name of mangá
 function getMangaNameFromPage(myCode){
-    var mName = document.getElementById("mangaName");
     chrome.tabs.executeScript(null, {
         code: myCode,
         allFrames: false,
         runAt: 'document_start',
     }, function(results) {
         var result = results[0].split(" - ")[0];
-        mName.innerText = result;
     });
 }
 
@@ -185,7 +188,7 @@ function addMangaToList(url, type=0){
 
 //Update the label with the corresponding action
 function refreshLabel(info, url, type=0){
-    var p = document.getElementById('mangaInfo');
+    var mangaInfo = document.getElementById('mangaInfo');
     
     if(info === ""){ //If was a new manga, add to list
         if(!type){
@@ -194,22 +197,23 @@ function refreshLabel(info, url, type=0){
             addMangaToList(url, type, 1);
         }
     }else{
+        document.styleSheets[0].rules[3].style.width = '';
         //verify if this a new unread manga
         if(info[1] === 'x'){
             if(!type){
-                p.innerHTML = `<p class="capInfo">Este mangá ainda não foi lido.</p>`;
+                mangaInfo.innerHTML = `<p class="capInfo">Este mangá ainda não foi lido.</p>`;
             }else{
                 updateLine(info, url);
                 var capNum = url.split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
+                mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
             }
         }else{
             if(!type){
                 //Get the cap number from URL
                 var capNum = info[1].split("/");
                 capNum = capNum[capNum.length-1];
-                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${info[1]}" target="_blank">${capNum}</a></i></p></b>`;
+                mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${info[1]}" target="_blank">${capNum}</a></i></p></b>`;
             }else{
                 var urlNum = url.split("/");
                 urlNum = urlNum[urlNum.length-1];
@@ -220,7 +224,7 @@ function refreshLabel(info, url, type=0){
                 if(urlNum > capNum){
                     updateLine(info, url);
                 }
-                p.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
+                mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <b><i><a href="${url}" target="_blank">${capNum}</a></i></p></b>`;
             }
         }
     }

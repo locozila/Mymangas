@@ -1,18 +1,22 @@
 body{
     min-width: 300px;
 }
-.infos{
-    text-align: center
-}
 
 .capInfo{
-    text-align: center
+    text-align: center;
+}
+
+.imgTitle{
+    width: 40vh;
+    margin: 2vh;
 }
 
 .content{
     max-height: 75vh;
     overflow-y: scroll;
-    margin: 5vh;
+    margin: 2vh 2vh 5vh 2vh;
+    background-color: #f1f1f1;
+    width: 120vh;
 }
 
 .content::-webkit-scrollbar {
@@ -23,9 +27,6 @@ a {
     text-decoration: none;
 }
 
-td{
-    border-style: groove;
-    border-left-style: solid;
-    border-left-color: #800000;
-    border-radius: 5px;
+table{
+    width: 100vh;
 }
