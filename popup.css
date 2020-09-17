@@ -1,5 +1,5 @@
 body{
-    min-width: 300px;
+   width: 300px;
 }
 
 .capInfo{
@@ -12,21 +12,24 @@ body{
 }
 
 .content{
-    max-height: 75vh;
+    height: 75vh;
     overflow-y: scroll;
     margin: 2vh 2vh 5vh 2vh;
     background-color: #f1f1f1;
-    width: 120vh;
 }
 
 .content::-webkit-scrollbar {
     display: none;
 }
 
-a {
+a,p {
     text-decoration: none;
+    color: inherit;
+    font-weight: bold;
 }
 
+tr:hover, tr:active {font-size: 115%;}
+
 table{
-    width: 100vh;
+    margin: 2vh;
 }
