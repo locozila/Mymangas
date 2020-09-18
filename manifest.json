@@ -1,6 +1,6 @@
 {
     "name": "Meus mangás",
-    "version": "1.2.0.3",
+    "version": "1.2.0.5",
     "description": "Histórico local de mangás",
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "https://unionmangas.top/", "https://unionleitor.top/"],
     "options_page": "options.html",
