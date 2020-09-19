@@ -3,51 +3,59 @@
         <head>
             <title>Mangás Salvos - UnionMangás</title>
             <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-            <link rel="stylesheet" href="options.css">
+            <link rel="stylesheet" href="Customization/options.css">
         </head>
         <body>
             <div class="header">
                 <div class="image">
                     <a href="https://unionleitor.top"><img class="imgTitle" src="images/my-manga-list.png" alt="Title"></a>
                 </div>
-                <!-- <div class="editButton">
-                    <button class="button" type="button">Editar Lista</button>
-                </div> -->
             </div>
-            <div class=center>
-                <div>
-                    <p>Lista dos mangás salvos:</p>
-                    <textarea id="mlist" name="mlist" rows="30" cols="66%"></textarea>
-                </div>
-                <div>
-                    <button id="save" class="bt" name="save">Save</button>
-                </div>
-                <div>
-                    <p>Para adicionar ou remover um item manualmente, siga o layout abaixo:</p>
-                    <p class="example">manga_link - last_cap_link</p>
-                </div>
-            </div>
-            <!-- <div class="body">
+            <div class="body">
                 <div class="tableList">
                     <div id="mlist" name="mlist" class="mList">
-                        <div class="item">
-                            <div class="mangaName">
-                                <p>Se eu colocar uma titulo muito grande ele vai ficar assim</p>
-                            </div>
-                            <div class="mangaCap">
-                                <p>Cap 80</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <div class="buttons">
-                    <button id="save" class="bt" name="save">Save</button>
+                <div id="options">
+                    <button id="btn-add" class="button btn-options" type="button">Novo</button>
+                    <button id="btn-edit" class="button btn-options" type="button">Editar</button>
+                    <button id="btn-cancel" class="button btn-options" type="button">Cancelar</button>
+                </div><br>
+                <div id="add-item" hidden>
+                    <div>
+                        <label for="manga-link">URL do Mangá</label><br>
+                        <input id="manga-link" class="textbox-add" type="text" placeholder="Obrigatório"><br>
+                    </div><br>
+                    <div>
+                        <label id="cap-link-label" for="cap-link">URL do Capítulo</label><br>
+                        <input id="cap-link" class="textbox-add" type="text">
+                        <button id="btn-save-add" class="btn-save-add" type="button">Salvar</button>
+                    </div>
                 </div>
-                <div>
-                    <p>Para adicionar ou remover um item manualmente, siga o layout abaixo:</p>
-                    <p class="example">manga_link - last_cap_link</p>
+                <div id="edit-item" hidden>
+                    <div>
+                        <input id="manga-index" type="text" readonly hidden>
+                        <label for="manga-name">Mangá</label><br>
+                        <input id="manga-name" class="textbox-add" type="text" readonly><br>
+                    </div><br>
+                    <div>
+                        <label for="cap-number">Capítulo (URL)</label><br>
+                        <input id="cap-number" class="textbox-add" type="text">
+                        <button id="btn-save-edit" class="btn-save-add" type="button">Salvar</button>
+                    </div>
                 </div>
-            </div> -->
+                <!-- <div id="edit-item" hidden>
+                    <div class="half-width-1">
+                        <label id="manga-name-label" for="manga-name">Mangá</label><br>
+                        <input id="manga-name" class="textbox-edit" type="text">
+                    </div>
+                    <div class="half-width-2 margin-left-2">
+                        <label id="cap-number-label" for="cap-number">Capítulo</label><br>
+                        <input id="cap-number" class="textbox-edit" type="text">
+                        <button id="btn-save-edit" class="btn-save-edit" type="button">Salvar</button>
+                    </div>
+                </div> -->
+            </div>
         </body>
-    <script src="options.js"></script>
+    <script type="module" src="Scripts/options.js"></script>
 </html>

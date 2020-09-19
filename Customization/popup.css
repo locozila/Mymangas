@@ -1,0 +1,35 @@
+body{
+   width: 300px;
+}
+
+.capInfo{
+    text-align: center;
+}
+
+.imgTitle{
+    width: 40vh;
+    margin: 2vh;
+}
+
+.content{
+    height: 75vh;
+    overflow-y: scroll;
+    margin: 2vh 2vh 5vh 2vh;
+    background-color: #f1f1f1;
+}
+
+.content::-webkit-scrollbar {
+    display: none;
+}
+
+a,p {
+    text-decoration: none;
+    color: inherit;
+    font-weight: bold;
+}
+
+tr:hover, tr:active {font-size: 115%;}
+
+table{
+    margin: 2vh;
+}
