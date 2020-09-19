@@ -1,10 +1,12 @@
 import * as Utils from "./utils.js";
 
-let cancelBt = document.getElementById('btn-cancel');
 let newBt = document.getElementById('btn-add');
 let editBt = document.getElementById('btn-edit');
 let saveAddBt = document.getElementById('btn-save-add');
 let saveEditBt = document.getElementById('btn-save-edit');
+let expBt = document.getElementById('exp-file');
+let impBt = document.getElementById('imp-file');
+let fileInput = document.getElementById('file-input');
 
 let arrayMangas = [];
 let mangasNameList = [];
@@ -140,14 +142,6 @@ function saveNewCap(){
     alert("Mangá Atualizado");
 }
 
-function cancel(){
-    cancelEditSave('add-item');
-    cancelEditSave('edit-item');
-
-    flag1 = 0;
-    flag2 = 0;
-}
-
 function cancelEditSave(elem){
     var saveEdit = document.getElementById(elem);
     saveEdit.setAttribute('hidden', '');
@@ -162,6 +156,40 @@ function cancelEditSave(elem){
 function getEventTarget(e) {
     e = e || window.event;
     return e.target || e.srcElement; 
+}
+
+function importMangas(){
+    if (confirm('Atenção: A lista será substituída pela contida no arquivo.\nDeseja realmente importar?')) {
+        fileInput.click();
+    }
+}
+
+fileInput.onchange = e => { 
+    var file = e.target.files[0]; 
+     
+    var reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+
+    reader.onload = readerEvent => {
+        var content = readerEvent.target.result;
+        chrome.storage.sync.set({'list': content});
+
+        loadData();
+    }
+}
+
+function exportMangas(){
+    var mangas = arrayMangas.join('\n');
+    download(mangas, "Meus mangás.txt");
+}
+
+function download(text, filename){
+    var blob = new Blob([text], {type: "text/plain"});
+    var url = window.URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
 }
 
 var ul = document.getElementById('mlist');
@@ -185,8 +213,9 @@ ul.onclick = function(event) {
 };
 
 window.onload = loadData();
-cancelBt.onclick = function() {cancel()};
 newBt.onclick = function() {showAddOptions()};
 editBt.onclick = function() {showEditOptions()};
 saveAddBt.onclick = function() {saveNewManga()};
 saveEditBt.onclick = function() {saveNewCap()};
+expBt.onclick = function() {exportMangas()};
+impBt.onclick = function() {importMangas()};
