@@ -15,7 +15,7 @@ let flag1 = 0;
 let flag2 = 0;
 
 async function getMangaData(){
-    var mData = new Promise(function(resolve, reject){
+    var mData = new Promise(function(resolve){
         chrome.storage.sync.get('list', function(result) {        
             resolve(result.list);
         }); 
@@ -26,7 +26,7 @@ async function getMangaData(){
 
 function loadData(){
     var mlist = document.getElementById('mlist');
-    
+
     getMangaData().then(function(lista){
         if(lista !== undefined && lista !== ""){
             arrayMangas = lista.split('\n');

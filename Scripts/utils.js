@@ -1,11 +1,10 @@
 function formatText(text){
-    text.toLowerCase();
-
     var listRomanNumbers = ["C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
     "X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
     "I","II","III","IV","V","VI","VII","VIII","IX"];
     
     var list = text.split('-');
+    list = removeElementFromArray(list, '');
     for(var i in list){
         var upper = list[i].toUpperCase();
 
@@ -34,18 +33,22 @@ function arraySearch(array, obj, type=0){
         aux = removeElementFromArray(aux);
         obj = aux.join('-');
     }
-   
+    
+    obj = obj.replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');    
     for(var i in array){
         var manga = array[i].split(" - ");
 
         if(manga[t] !== 'x'){
            manga[t] = getNameByUrl(manga[t]);
         }
-       
+        
+        manga[t] = manga[t].replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+
         if(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }) === 0){
            infos = array[i].split(" - ");
         }
     }
+
     return infos;
 }
 
