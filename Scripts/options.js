@@ -12,27 +12,6 @@ let mangasNameList = [];
 let flag1 = 0;
 let flag2 = 0;
 
-let item = `<div class="item">
-                <div class="mangaName">
-                    <p>Se eu colocar uma titulo muito grande ele vai ficar assim</p>
-                </div>
-                <div class="mangaCap">
-                    <p>Cap 80</p>
-                </div>
-            </div>`;
-
-function saveList(){
-    var text = mlist.value;
-    chrome.storage.sync.set({'list': text});
-    alert("Lista salva!");
-}
-
-function load() {
-    chrome.storage.sync.get('list', function(result) {      
-        mlist.value = (result.list === undefined || result.list === "") ? "": result.list;
-    });
-}
-
 async function getMangaData(){
     var mData = new Promise(function(resolve, reject){
         chrome.storage.sync.get('list', function(result) {        
