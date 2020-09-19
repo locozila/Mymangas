@@ -12,13 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function listMangas(){
-    //var mName = document.getElementById('mangaName');
+function listMangas(){    
     var mangaInfo = document.getElementById('mangaInfo');
 
     chrome.storage.sync.get('list', function(result) {   
         if(result.list === undefined || result.list === ""){        
-            document.styleSheets[0].rules[2].style.width = '60%';
             mangaInfo.innerHTML = `<p class="capInfo">Nenhum Mangá Salvo!</p>`;          
         }else{
             var content = `<table align="center">`;
@@ -50,9 +48,6 @@ function listMangas(){
 
 //Funcion to analyse perfil manga page
 function mangaPage(url){
-    document.styleSheets[0].rules[3].style.height = '';
-    document.styleSheets[0].rules[2].style.width = '112vh';
-
     chrome.storage.sync.get('list', function(result) {   
         if(result.list === undefined || result.list === ""){
             addMangaToList(url);
@@ -66,9 +61,6 @@ function mangaPage(url){
 
 //Function to analyse cap manga page
 function capPage(url){
-    document.styleSheets[0].rules[3].style.height = '';
-    document.styleSheets[0].rules[2].style.width = '112vh';  
-
     chrome.storage.sync.get('list', function(result) {    
         if(result.list === undefined || result.list === ""){
             addMangaToList(url, 1);

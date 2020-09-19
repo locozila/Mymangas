@@ -25,6 +25,8 @@ async function getMangaData(){
 }
 
 function loadData(){
+    var mlist = document.getElementById('mlist');
+    
     getMangaData().then(function(lista){
         if(lista !== undefined && lista !== ""){
             arrayMangas = lista.split('\n');
@@ -40,7 +42,6 @@ function loadData(){
                 else return -1;
             });
 
-            var mlist = document.getElementById('mlist');
             var htmlContent = '';
             for(var i in arrayMangas){
                 var content = arrayMangas[i].split(' - ');
@@ -63,6 +64,8 @@ function loadData(){
                 </div>`;
             }
             mlist.innerHTML = htmlContent;
+        }else{
+            mlist.innerHTML = '';
         }
     });
 }
@@ -165,16 +168,19 @@ function importMangas(){
 }
 
 fileInput.onchange = e => { 
-    var file = e.target.files[0]; 
-     
-    var reader = new FileReader();
-    reader.readAsText(file,'UTF-8');
+    var file = e.target.files[0];
+    var fileExtension = file.name.toLowerCase().split('.')[1];
 
-    reader.onload = readerEvent => {
-        var content = readerEvent.target.result;
-        chrome.storage.sync.set({'list': content});
-
-        loadData();
+    if (fileExtension === 'txt'){
+        var reader = new FileReader();
+        reader.readAsText(file,'UTF-8');
+    
+        reader.onload = readerEvent => {
+            var content = readerEvent.target.result;
+            chrome.storage.sync.set({'list': content});
+    
+            loadData();
+        }
     }
 }
 
