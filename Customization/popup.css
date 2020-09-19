@@ -12,7 +12,7 @@ body{
 }
 
 .content{
-    height: 75vh;
+    height: 75%;
     overflow-y: scroll;
     margin: 2vh 2vh 5vh 2vh;
     background-color: #f1f1f1;

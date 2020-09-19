@@ -18,7 +18,7 @@ function listMangas(){
 
     chrome.storage.sync.get('list', function(result) {   
         if(result.list === undefined || result.list === ""){        
-            document.styleSheets[0].rules[2].style.width = '112vh';
+            document.styleSheets[0].rules[2].style.width = '60%';
             mangaInfo.innerHTML = `<p class="capInfo">Nenhum Mangá Salvo!</p>`;          
         }else{
             var content = `<table align="center">`;
