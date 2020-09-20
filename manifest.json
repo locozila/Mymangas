@@ -1,6 +1,6 @@
 {
     "name": "Meus mangás",
-    "version": "2.0.2.7",
+    "version": "2.0.3.0",
     "description": "Histórico local de mangás",
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "https://unionmangas.top/", "https://unionleitor.top/"],
     "options_page": "options.html",
@@ -8,6 +8,13 @@
       "scripts": ["Scripts/background.js"],
       "persistent": false
     },
+    "content_scripts": [
+      {
+        "matches": ["https://unionleitor.top/leitor/*", "https://unionmangas.top/leitor/*"],
+        "js": ["Scripts/popup.js"],
+        "run_at": "document_idle"
+      }
+    ],
     "page_action": {
         "default_popup": "popup.html",
         "default_icon": {

@@ -1,6 +1,11 @@
-import * as Utils from "./utils.js";
+window.onload = function() {
+    console.log(1);
+    var url = window.location.href;
+    if(url.search("/leitor/") != -1) capPage(url);
+}
 
 document.addEventListener('DOMContentLoaded', function() {
+    console.log(2);
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         if(tabs[0].url.search("/perfil-manga/") != -1 || tabs[0].url.search("/manga/") != -1){
             mangaPage(tabs[0].url);
@@ -12,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+//Function to show manga list on home page
 function listMangas(){    
     var mangaInfo = document.getElementById('mangaInfo');
 
@@ -26,8 +32,8 @@ function listMangas(){
                 var mangaA = a.split(" - ");
                 var mangaB = b.split(" - ");
 
-                var mangaNameA = Utils.formatText(Utils.getNameByUrl(mangaA[0]));
-                var mangaNameB = Utils.formatText(Utils.getNameByUrl(mangaB[0]));
+                var mangaNameA = formatText(getNameByUrl(mangaA[0]));
+                var mangaNameB = formatText(getNameByUrl(mangaB[0]));
 
                 if (mangaNameA > mangaNameB) return 1;
                 else return -1;
@@ -35,7 +41,7 @@ function listMangas(){
 
             for (var i in mangaList){
                 var manga = mangaList[i].split(" - ");
-                var mangaName = Utils.formatText(Utils.getNameByUrl(manga[0]));        
+                var mangaName = formatText(getNameByUrl(manga[0]));        
 
                 var link = (manga[1] !== 'x') ? manga[1] : manga[0];
                 content += `<tr><td><a href="${link}" target="_blank">${mangaName}</a></td></tr>`;
@@ -53,7 +59,7 @@ function mangaPage(url){
             addMangaToList(url);
         }else{
             var mangaList = result.list.split('\n');
-            var info = Utils.arraySearch(mangaList, url);
+            var info = arraySearch(mangaList, url);
             refreshLabel(info, url);
         }
     });   
@@ -66,7 +72,7 @@ function capPage(url){
             addMangaToList(url, 1);
         }else{
             var mangaList = result.list.split('\n');
-            var info = Utils.arraySearch(mangaList, url, 1);
+            var info = arraySearch(mangaList, url, 1);
             refreshLabel(info, url, 1);
         }
     });
@@ -82,7 +88,7 @@ function addMangaToList(url, type=0){
     if(type){
         var mName = url.split('/');
         mName = mName[mName.length-2].split('_');
-        mName = Utils.removeElementFromArray(mName);
+        mName = removeElementFromArray(mName);
         var mangaName = mName.join('-');
         mangaData = urlPerfilManga + mangaName + " - " + url;
     }else{
@@ -115,18 +121,18 @@ function refreshLabel(info, url, type=0){
                 mangaInfo.innerHTML = `<p class="capInfo">Este mangá ainda não foi lido.</p>`;
             }else{
                 updateLine(info, url);
-                var capNum = Utils.getNameByUrl(url);
+                var capNum = getNameByUrl(url);
                 mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <i><a href="${url}" target="_blank">${capNum}</a></i></p>`;
             }
         }else{
             if(!type){
                 //Get the cap number from URL
-                var capNum = Utils.getNameByUrl(info[1]);
+                var capNum = getNameByUrl(info[1]);
                 mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <i><a href="${info[1]}" target="_blank">${capNum}</a></i></p>`;
             }else{
-                var urlNum = Utils.getNameByUrl(url);
+                var urlNum = getNameByUrl(url);
 
-                var capNum = Utils.getNameByUrl(info[1]);
+                var capNum = getNameByUrl(info[1]);
                 var numberLabel = capNum;
                 var urlData = info[1];
 
@@ -153,4 +159,76 @@ function updateLine(info, url){
         var mangaList = array.join("\n");
         chrome.storage.sync.set({'list': mangaList});
     });
+}
+
+
+/**
+* Index 0 - Manga link
+* Index 1 - Cap link
+* 
+* The type is default with the index 1
+* */
+function arraySearch(array, obj, type=0){
+    var infos = "";
+    var t = type;
+   
+    if(!type){
+        obj = getNameByUrl(obj);
+    }else{
+        t = 0;
+        obj = getNameByUrl(obj, 2);
+
+        var aux = obj.split('_');
+        aux = removeElementFromArray(aux);
+        obj = aux.join('-');
+    }
+    
+    obj = obj.replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');    
+    for(var i in array){
+        var manga = array[i].split(" - ");
+
+        if(manga[t] !== 'x'){
+           manga[t] = getNameByUrl(manga[t]);
+        }
+        
+        manga[t] = manga[t].replace(/[`~!@#$%^&*()|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, '');
+
+        if(manga[t].localeCompare(obj, undefined, { sensitivity: 'base' }) === 0){
+           infos = array[i].split(" - ");
+        }
+    }
+
+    return infos;
+}
+
+//Function to get manga name from url
+function getNameByUrl(url, index=1){
+    var arrayString = url.split("/");
+    return arrayString[arrayString.length-index];
+}
+
+//Removing element from manga name
+function removeElementFromArray(arr, elem="-"){
+    for(var i = 0; i < arr.length; i++){
+        if(arr[i] === elem) {
+            arr.splice(i, 1);
+        } 
+    }
+    return arr;
+}
+
+//Format text to manga list
+function formatText(text){
+    var listRomanNumbers = ["C","CC","CCC","CD","D","DC","DCC","DCCC","CM",
+    "X","XX","XXX","XL","L","LX","LXX","LXXX","XC",
+    "I","II","III","IV","V","VI","VII","VIII","IX"];
+    
+    var list = text.split('-');
+    list = removeElementFromArray(list, '');
+    for(var i in list){
+        var upper = list[i].toUpperCase();
+
+        list[i] = (listRomanNumbers.includes(upper)) ? list[i] = upper : list[i].charAt(0).toUpperCase() + list[i].slice(1);
+    }
+    return list.join(" ");
 }

@@ -108,7 +108,7 @@ label{
     font-weight: 500;
 }
 
-#add-item, #edit-item{
+#add-item, #edit-item, #alert{
     width: 40%;
     margin: auto;
 }
@@ -127,6 +127,7 @@ label{
 
 #options{
     text-align: center;
+    margin-top: -1%;
 }
 
 .half-width-1{
@@ -167,4 +168,11 @@ label{
 
 input{
     text-align: center;
+}
+
+.alert-text{
+    text-align: center;
+    font-family: "Franklin Gothic Medium";
+    font-size: larger;
+    font-style: italic;
 }
