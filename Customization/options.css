@@ -81,7 +81,9 @@ body{
 }
 
 .item:hover, .item:active {
-    font-size: 180%; 
+    font-size: 165%; 
+    font-style: italic;
+    font-weight: 600;
     cursor: context-menu;
 }
 

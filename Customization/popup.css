@@ -19,16 +19,24 @@ body{
 }
 
 .content::-webkit-scrollbar {
-    display: none;
+    width: 3px;
+}
+  
+.content::-webkit-scrollbar-thumb {
+    background: #9c0000; 
 }
 
 a,p {
     text-decoration: none;
     color: inherit;
-    font-weight: bold;
+    /* font-weight: 300; */
 }
 
-tr:hover, tr:active {font-size: 115%;}
+tr:hover, tr:active {
+    font-style: italic;
+    font-weight: bolder !important;
+    /* font-size: 110%; */
+}
 
 table{
     margin: 2vh;
