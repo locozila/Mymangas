@@ -1,11 +1,10 @@
 window.onload = function() {
-    console.log(1);
+    console.log("Saving cap...");
     var url = window.location.href;
-    if(url.search("/leitor/") != -1) capPage(url);
+    if(url.search("/leitor/") != -1) capPage(url, 1);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log(2);
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         if(tabs[0].url.search("/perfil-manga/") != -1 || tabs[0].url.search("/manga/") != -1){
             mangaPage(tabs[0].url);
@@ -66,20 +65,20 @@ function mangaPage(url){
 }
 
 //Function to analyse cap manga page
-function capPage(url){
+function capPage(url, auto=0){
     chrome.storage.sync.get('list', function(result) {    
         if(result.list === undefined || result.list === ""){
-            addMangaToList(url, 1);
+            addMangaToList(url, 1, auto);
         }else{
             var mangaList = result.list.split('\n');
             var info = arraySearch(mangaList, url, 1);
-            refreshLabel(info, url, 1);
+            refreshLabel(info, url, 1, auto);
         }
     });
 }
 
 //Add an entry on storage
-function addMangaToList(url, type=0){
+function addMangaToList(url, type=0, auto=0){
     var urlPerfilManga = (url.includes("unionleitor")) ? "https://unionleitor.top/manga/" : "https://unionmangas.top/manga/";
     var p = document.getElementById('mangaInfo');
     var mangaData = "";
@@ -100,11 +99,11 @@ function addMangaToList(url, type=0){
         chrome.storage.sync.set({'list': mangas});
     }); 
     
-    p.innerHTML = `<p class="capInfo">Mangá Salvo!</p>`;
+    if(!auto) p.innerHTML = `<p class="capInfo">Mangá Salvo!</p>`;
 }
 
 //Update the label with the corresponding action
-function refreshLabel(info, url, type=0){
+function refreshLabel(info, url, type=0, auto=0){
     var mangaInfo = document.getElementById('mangaInfo');
     
     if(info === ""){ //If was a new manga, add to list
@@ -114,7 +113,7 @@ function refreshLabel(info, url, type=0){
             addMangaToList(url, type, 1);
         }
     }else{
-        document.styleSheets[0].rules[3].style.width = '';
+        if(!auto) document.styleSheets[0].rules[3].style.width = '';
         //verify if this a new unread manga
         if(info[1] === 'x'){
             if(!type){
@@ -141,7 +140,8 @@ function refreshLabel(info, url, type=0){
                     numberLabel = urlNum;
                     urlData = url;
                 }
-                mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <i><a href="${urlData}" target="_blank">${numberLabel}</a></i></p>`;
+                
+                if (!auto) mangaInfo.innerHTML = `<p class="capInfo">Você está lendo Cap <i><a href="${urlData}" target="_blank">${numberLabel}</a></i></p>`;
             }
         }
     }
